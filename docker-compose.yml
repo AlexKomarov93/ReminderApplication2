@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  db:
+    image: mysql:8
+    container_name: reminder-db
+    restart: unless-stopped
+    env_file:
+      - passes.env
+    volumes:
+      - db_data:/var/lib/mysql
+
+  reminder-app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    env_file:
+      - passes.env
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/reminder_app
+
+volumes:
+  db_data:
